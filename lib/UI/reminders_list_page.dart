@@ -1,7 +1,7 @@
 // lib/UI/reminders_list_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:reminder_application/main.dart'; // To access the global plugin
+import 'package:reminder_application/main.dart';
 
 class RemindersListPage extends StatefulWidget {
   const RemindersListPage({Key? key}) : super(key: key);
@@ -26,74 +26,80 @@ class _RemindersListPageState extends State<RemindersListPage> {
       _pendingReminders = pendingNotifications;
     });
   }
-  
-  // This function can be used to cancel a specific reminder
+
   Future<void> _cancelReminder(int id) async {
     await flutterLocalNotificationsPlugin.cancel(id);
-    _getPendingReminders(); // Refresh the list
+    _getPendingReminders();
   }
   
-  // You might want to format the time for better readability
-  String _formatTime(PendingNotificationRequest reminder) {
-    if (reminder.payload != null) {
-      // Assuming payload contains the full time info, or you can format based on the scheduled date
-      // This is a simplified example. You may need to parse the scheduled time from the plugin's data.
-      return 'Scheduled for: ' + reminder.body!;
-    }
-    return 'Time not specified';
+  String _formatTime(String? body) {
+    return body ?? 'Time not specified';
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Reminders'),
-        backgroundColor: const Color(0xFF6A1B9A),
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF6A1B9A), Color(0xFF9C27B0)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
+        title: const Text(
+          'My Reminders',
+          style: TextStyle(color: Colors.white),
         ),
-        child: _pendingReminders.isEmpty
-            ? const Center(
-                child: Text(
-                  'No reminders scheduled.',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      extendBodyBehindAppBar: true,
+      body: Container(
+        color: theme.primaryColor,
+        child: SafeArea(
+          child: _pendingReminders.isEmpty
+              ? const Center(
+                  child: Text(
+                    'No reminders scheduled.',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
                   ),
+                )
+              : ListView.builder(
+                  itemCount: _pendingReminders.length,
+                  itemBuilder: (context, index) {
+                    final reminder = _pendingReminders[index];
+                    return Card(
+                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ListTile(
+                        leading: const Icon(
+                          Icons.notifications_active,
+                          color: Colors.teal,
+                        ),
+                        title: Text(
+                          reminder.title ?? 'No Title',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          _formatTime(reminder.body),
+                        ),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.pink),
+                          onPressed: () => _cancelReminder(reminder.id),
+                        ),
+                      ),
+                    );
+                  },
                 ),
-              )
-            : ListView.builder(
-                itemCount: _pendingReminders.length,
-                itemBuilder: (context, index) {
-                  final reminder = _pendingReminders[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        reminder.title ?? 'No Title',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(
-                        reminder.body ?? 'No Body',
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () => _cancelReminder(reminder.id),
-                      ),
-                    ),
-                  );
-                },
-              ),
+        ),
       ),
     );
   }

@@ -4,9 +4,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
-import 'package:reminder_application/UI/front_page.dart'; // Import the new front page
+import 'package:reminder_application/UI/front_page.dart';
 
-// Global variable for the notification plugin
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
@@ -45,9 +44,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Simple Reminder App',
       theme: ThemeData(
-        primarySwatch: Colors.deepPurple, // Using a more relevant primary color
+        primarySwatch: Colors.teal, // New primary color
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const FrontPage(), // Set the front page as the starting screen
+      home: const FrontPage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

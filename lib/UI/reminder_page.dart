@@ -1,3 +1,4 @@
+// lib/UI/reminder_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -32,8 +33,8 @@ class _ReminderPageState extends State<ReminderPage> {
         return Theme(
           data: ThemeData.light().copyWith(
             colorScheme: ColorScheme.fromSwatch(
-              primarySwatch: Colors.deepPurple,
-              accentColor: Colors.deepPurpleAccent,
+              primarySwatch: Colors.teal,
+              accentColor: Colors.tealAccent,
             ),
           ),
           child: child!,
@@ -110,133 +111,148 @@ class _ReminderPageState extends State<ReminderPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF6A1B9A), Color(0xFF9C27B0)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
+      appBar: AppBar(
+        title: const Text('Set a Reminder'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Set a Reminder ⏰',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 40),
-              Card(
-                elevation: 8,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  child: DropdownButtonFormField<String>(
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      labelText: 'Select Day',
-                      labelStyle: TextStyle(color: Colors.deepPurple),
-                    ),
-                    value: _selectedDay,
-                    items: _days.map((day) {
-                      return DropdownMenuItem(
-                        value: day,
-                        child: Text(day),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedDay = newValue;
-                      });
-                    },
-                    style: const TextStyle(color: Colors.black),
-                    dropdownColor: Colors.white,
-                    icon: const Icon(Icons.arrow_drop_down, color: Colors.deepPurple),
+      ),
+      extendBodyBehindAppBar: true,
+      body: Container(
+        decoration: BoxDecoration(
+          color: theme.primaryColor,
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Spacer(),
+                const Text(
+                  'Create New Reminder ⏰',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              const SizedBox(height: 20),
-              Card(
-                elevation: 8,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  child: DropdownButtonFormField<String>(
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      labelText: 'Select Activity',
-                      labelStyle: TextStyle(color: Colors.deepPurple),
-                    ),
-                    value: _selectedActivity,
-                    items: _activities.map((activity) {
-                      return DropdownMenuItem(
-                        value: activity,
-                        child: Text(activity),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedActivity = newValue;
-                      });
-                    },
-                    style: const TextStyle(color: Colors.black),
-                    dropdownColor: Colors.white,
-                    icon: const Icon(Icons.arrow_drop_down, color: Colors.deepPurple),
+                const SizedBox(height: 40),
+                Card(
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () => _selectTime(context),
-                  icon: const Icon(Icons.access_time),
-                  label: Text(
-                    'Time: ${_selectedTime.format(context)}',
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepPurple,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child: DropdownButtonFormField<String>(
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        labelText: 'Select Day',
+                        labelStyle: TextStyle(color: Colors.teal),
+                      ),
+                      value: _selectedDay,
+                      items: _days.map((day) {
+                        return DropdownMenuItem(
+                          value: day,
+                          child: Text(day),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedDay = newValue;
+                        });
+                      },
+                      style: const TextStyle(color: Colors.black),
+                      dropdownColor: Colors.white,
+                      icon: const Icon(Icons.arrow_drop_down, color: Colors.teal),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 40),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _scheduleReminder,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: Colors.deepPurpleAccent,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    elevation: 8,
+                const SizedBox(height: 20),
+                Card(
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  child: const Text(
-                    'Set Reminder',
-                    style: TextStyle(fontSize: 18),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child: DropdownButtonFormField<String>(
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        labelText: 'Select Activity',
+                        labelStyle: TextStyle(color: Colors.teal),
+                      ),
+                      value: _selectedActivity,
+                      items: _activities.map((activity) {
+                        return DropdownMenuItem(
+                          value: activity,
+                          child: Text(activity),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedActivity = newValue;
+                        });
+                      },
+                      style: const TextStyle(color: Colors.black),
+                      dropdownColor: Colors.white,
+                      icon: const Icon(Icons.arrow_drop_down, color: Colors.teal),
+                    ),
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () => _selectTime(context),
+                    icon: const Icon(Icons.access_time),
+                    label: Text(
+                      'Time: ${_selectedTime.format(context)}',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.teal,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 40),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _scheduleReminder,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: Colors.pink, // A different accent color
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      elevation: 8,
+                    ),
+                    child: const Text(
+                      'Set Reminder',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                ),
+                const Spacer(),
+              ],
+            ),
           ),
         ),
       ),
