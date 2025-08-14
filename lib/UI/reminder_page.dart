@@ -1,8 +1,10 @@
 // lib/UI/reminder_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:reminder_application/main.dart';
+import 'package:reminder_application/UI/reminders_list_page.dart'; // Ensure this import is present
 
 class ReminderPage extends StatefulWidget {
   const ReminderPage({Key? key}) : super(key: key);

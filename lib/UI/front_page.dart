@@ -4,7 +4,6 @@ import 'package:reminder_application/UI/reminder_page.dart';
 import 'package:reminder_application/UI/reminders_list_page.dart';
 
 class FrontPage extends StatelessWidget {
-  const FrontPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +15,7 @@ class FrontPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(
-              Icons.access_alarm,
+              Icons.alarm,
               color: Colors.white,
               size: 100,
             ),

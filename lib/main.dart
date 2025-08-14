@@ -6,6 +6,7 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:reminder_application/UI/front_page.dart';
 
+// FIX: Removed 'const' here, as FlutterLocalNotificationsPlugin is not a const constructor
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
@@ -23,10 +24,12 @@ Future<void> main() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
 
-  const DarwinInitializationSettings initializationSettingsIOS =
+  // This was already fixed in a previous step to be 'final'
+  final DarwinInitializationSettings initializationSettingsIOS =
       DarwinInitializationSettings();
 
-  const InitializationSettings initializationSettings = InitializationSettings(
+  // FIX: Changed 'const' to 'final' because it's initialized with a non-const value (initializationSettingsIOS)
+  final InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
     iOS: initializationSettingsIOS,
   );
@@ -47,7 +50,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.teal, // New primary color
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const FrontPage(),
+      home: FrontPage(),
       debugShowCheckedModeBanner: false,
     );
   }
